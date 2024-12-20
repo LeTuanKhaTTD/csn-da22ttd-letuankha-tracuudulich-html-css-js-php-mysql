@@ -96,3 +96,28 @@ footer .text-white a:hover {
     align-items: center; /* Căn giữa logo và chữ */
     gap: 10px; /* Khoảng cách giữa logo và chữ */
 }
+/*Điểm du lịch nôỉ bậc*/
+#featured-results {
+    display: flex;
+    overflow-x: auto; /* Cho phép kéo ngang */
+    scroll-snap-type: x mandatory; /* Giúp các thẻ card dừng lại đúng vị trí khi kéo */
+}
+
+#featured-results .col-md-4 {
+    flex: 0 0 auto; /* Đảm bảo các thẻ card có thể hiển thị cùng nhau */
+    scroll-snap-align: start; /* Tự động dừng lại ở vị trí card đầu tiên */
+    margin-right: 20px; /* Khoảng cách giữa các card */
+}
+
+#featured-results .card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+#featured-results .card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+

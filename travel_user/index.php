@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('db_connect.php');  
+include('./db_connect.php');  
 
 // Kiểm tra nếu người dùng đã đăng nhập
 if (isset($_SESSION['user_id'])) {
@@ -14,7 +14,7 @@ if (isset($_GET['search'])) {
     $search_term = $_GET['search'];
 
     // Tìm kiếm các điểm du lịch trong cơ sở dữ liệu
-    $query = "SELECT * FROM tourist_spots WHERE name LIKE ? OR address LIKE ?";
+    $query = "SELECT * FROM DiemDuLich WHERE tendiemdl LIKE ? OR diachi LIKE ?";
     $stmt = mysqli_prepare($conn, $query);
     $search_term = "%" . $search_term . "%";
     mysqli_stmt_bind_param($stmt, 'ss', $search_term, $search_term);
@@ -47,15 +47,13 @@ if (isset($_GET['search'])) {
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item"><a class="nav-link active" href="#">Trang chủ</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Giới thiệu</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Liên hệ</a></li>
+                <li class="nav-item"><a class="nav-link" href="GT.php">Giới thiệu</a></li>
+                <li class="nav-item"><a class="nav-link" href="LH.php">Liên hệ</a></li>
                 <?php
                 // Kiểm tra xem người dùng đã đăng nhập chưa
                 if (isset($_SESSION['username'])): ?>
-                    <!-- Nếu đã đăng nhập, hiển thị "Đăng xuất" -->
                     <li class="nav-item"><a class="nav-link" href="logout.php">Đăng xuất</a></li>
                 <?php else: ?>
-                    <!-- Nếu chưa đăng nhập, hiển thị "Đăng nhập" -->
                     <li class="nav-item"><a class="nav-link" href="login.php">Đăng nhập</a></li>
                 <?php endif; ?>
             </ul>
@@ -82,10 +80,10 @@ if (isset($_GET['search'])) {
                 <?php foreach ($search_result as $spot): ?>
                 <div class="col-md-4">
                     <div class="card mb-4">
-                        <img src="images/<?php echo $spot['image']; ?>" class="card-img-top" alt="<?php echo $spot['name']; ?>">
+                        <img src="../images<?php echo $spot['hinhanh']; ?>" class="card-img-top" alt="<?php echo $spot['tenanh']; ?>">
                         <div class="card-body">
-                            <h5 class="card-title"><?php echo $spot['name']; ?></h5>
-                            <p class="card-text"><?php echo $spot['address']; ?></p>
+                        <h5 class="card-title"><?php echo $spot['tendiemdl']; ?></h5>
+                        <p class="card-text"><?php echo $spot['diachi']; ?></p>
                             <a href="view.php?id=<?php echo $spot['id']; ?>" class="btn btn-primary">Xem chi tiết</a>
                         </div>
                     </div>
@@ -96,6 +94,33 @@ if (isset($_GET['search'])) {
             <?php endif; ?>
         </div>
     </div>
+    <div class="container my-5">
+    <h2 class="text-center mb-4">Các địa điểm du lịch nổi bật</h2>
+    <div class="row g-4" id="featured-results">
+        <?php
+        // Kiểm tra nếu không có tìm kiếm, hiển thị các điểm du lịch nổi bật
+        if (empty($search_result)): 
+            // Lấy các điểm du lịch nổi bật từ cơ sở dữ liệu (ví dụ: top 3 điểm du lịch nổi bật)
+            $query_featured = "SELECT * FROM DiemDuLich ORDER BY giave DESC LIMIT 3";  // Thay đổi tiêu chí lọc nếu cần
+            $result_featured = mysqli_query($conn, $query_featured);
+
+            while ($spot = mysqli_fetch_assoc($result_featured)): ?>
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0 h-100">
+                        <img src="../images<?php echo $spot['file_path']; ?>" class="card-img-top img-fluid rounded-top" alt="<?php echo $spot['tendiemdl']; ?>">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-truncate"><?php echo $spot['tendiemdl']; ?></h5>
+                            <p class="card-text text-muted"><?php echo $spot['diachi']; ?></p>
+                            <div class="mt-auto">
+                                <a href="view.php?id=<?php echo $spot['madiemdl']; ?>" class="btn btn-primary btn-block w-100">Xem chi tiết</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endwhile; ?>
+        <?php endif; ?>
+    </div>
+</div>
 
     <footer class="bg-dark text-white pt-5 pb-4">
         <div class="container text-center text-md-left">

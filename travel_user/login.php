@@ -18,7 +18,7 @@
             <div class="alert alert-danger" role="alert">
                 <?php 
                 echo $_SESSION['error_message']; 
-                unset($_SESSION['error_message']);  // Xóa thông báo lỗi sau khi hiển thị
+                unset($_SESSION['error_message']);  
                 ?>
             </div>
         <?php endif; ?>
